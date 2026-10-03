@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Filing Map</title>
+    <meta
+      name="description"
+      content="Suggest A–Z Manual homes and remember filing intent in Directory.md"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Source+Sans+3:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="header">
+        <p class="eyebrow">Offline</p>
+        <h1>Filing Map</h1>
+        <p class="lede">
+          Suggest Manual leaf homes, confirm filing intent, and keep it in
+          <code>Directory.md</code>. Import and export the Markdown file — nothing
+          moves on disk.
+        </p>
+      </header>
+
+      <div class="toolbar" aria-label="Directory.md file">
+        <button type="button" class="btn" id="btn-import">Import Directory.md</button>
+        <button type="button" class="btn-quiet" id="btn-export">Export</button>
+        <button type="button" class="btn-quiet" id="btn-save">Save</button>
+        <button type="button" class="btn-quiet" id="btn-new">New empty</button>
+        <span id="dirty-indicator" class="dirty-dot hidden" title="Unsaved changes" aria-hidden="true"></span>
+        <p class="meta" id="source-meta">Directory.md · 0 row(s)</p>
+        <input id="import-input" class="sr-only" type="file" accept=".md,text/markdown,text/plain" />
+      </div>
+
+      <nav class="tabs" aria-label="Sections">
+        <button type="button" class="tab tab-active" data-tab="file">File</button>
+        <button type="button" class="tab" data-tab="search">Search</button>
+        <button type="button" class="tab" data-tab="browse">Browse</button>
+        <button type="button" class="tab" data-tab="tree">Tree</button>
+      </nav>
+
+      <div id="alert-error" class="alert alert-warn hidden" role="alert"></div>
+      <div id="alert-status" class="alert hidden"></div>
+      <div id="alert-dup" class="alert alert-warn hidden">
+        Soft warning: that filename already has a row. Another row was still added.
+      </div>
+
+      <section id="panel-file" class="stack" aria-label="File one item">
+        <div class="panel drop" id="drop-zone">
+          <p>Drop one file (name/extension only) or type below</p>
+          <label class="btn-quiet" style="cursor: pointer">
+            Choose file
+            <input id="choose-file" type="file" class="sr-only" />
+          </label>
+        </div>
+
+        <label class="label">
+          <span>Filename</span>
+          <input class="field" id="file-name" placeholder="invoice-march.pdf" />
+        </label>
+
+        <label class="label">
+          <span>Description (optional)</span>
+          <textarea
+            class="field min-h"
+            id="description"
+            placeholder="Personal e-bill for March"
+          ></textarea>
+        </label>
+
+        <div class="row">
+          <button type="button" class="btn" id="btn-suggest">Suggest homes</button>
+        </div>
+
+        <p id="unclear" class="muted hidden">
+          Rules are unclear. Pick a Manual leaf or type a path.
+        </p>
+        <ul id="suggestions" class="list"></ul>
+
+        <label class="label">
+          <span>Home (accept, pick, or type any path)</span>
+          <input
+            class="field"
+            id="home"
+            placeholder="F - Finance / F1 E-Bills"
+            list="leaf-datalist"
+          />
+          <datalist id="leaf-datalist"></datalist>
+        </label>
+
+        <label class="label">
+          <span>Note (optional)</span>
+          <input class="field" id="note" placeholder="Optional one-line note" />
+        </label>
+
+        <button type="button" class="btn" id="btn-confirm">
+          Confirm &amp; append in memory
+        </button>
+
+        <details class="panel">
+          <summary>Pick from Manual tree</summary>
+          <ul id="pick-list" class="pick-list"></ul>
+        </details>
+      </section>
+
+      <section id="panel-search" class="stack-sm hidden" aria-label="Search filings">
+        <div class="row">
+          <input
+            class="field"
+            id="search-query"
+            style="flex: 1"
+            placeholder="Part of a filename"
+          />
+          <button type="button" class="btn" id="btn-search">Search</button>
+        </div>
+        <div id="search-list"></div>
+      </section>
+
+      <section id="panel-browse" class="stack-sm hidden" aria-label="Browse all filings">
+        <div class="row-between">
+          <p class="muted" id="browse-count">0 row(s) in memory</p>
+          <button type="button" class="btn-quiet" id="btn-browse-refresh">Refresh</button>
+        </div>
+        <div id="browse-list"></div>
+      </section>
+
+      <section id="panel-tree" class="stack-sm hidden" aria-label="Manual filing tree">
+        <p class="muted">
+          Official Manual leaves for reference. Confirm still allows any typed path.
+        </p>
+        <ul id="tree-list" class="list"></ul>
+      </section>
+    </main>
+
+    <script src="js/manual-tree.js"></script>
+    <script src="js/directory-md.js"></script>
+    <script src="js/rules.js"></script>
+    <script src="js/store.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
