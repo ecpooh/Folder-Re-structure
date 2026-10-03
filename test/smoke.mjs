@@ -63,5 +63,30 @@ assert.ok(roundTrip.length >= 3);
 const leaves = store.listManualLeaves();
 assert.ok(leaves.some((l) => l.code === "R" && l.path === "R - Raw"));
 assert.ok(!leaves.some((l) => l.code === "J"));
+assert.ok(
+  leaves.some((l) => l.path === "Somewhere / Custom"),
+  "typed/imported home path should appear in tree leaves",
+);
+
+const nested = FM.leavesFromHomePath("F - Finance / F1 E-Bills / F11 Taxes");
+assert.equal(nested.length, 3);
+assert.equal(nested[2].path, "F - Finance / F1 E-Bills / F11 Taxes");
+assert.equal(nested[2].parent, "F1");
+
+const withImport = FM.mergeManualLeaves(FM.listManualLeaves(), [
+  "F - Finance / F1 E-Bills / F11 Taxes",
+  "Somewhere / Custom",
+]);
+assert.ok(withImport.some((l) => l.path === "F - Finance / F1 E-Bills / F11 Taxes"));
+assert.ok(withImport.some((l) => l.path === "Somewhere"));
+assert.ok(withImport.some((l) => l.path === "Somewhere / Custom"));
+
+store.loadText(
+  "# Directory\n\n| File | Home | Note |\n| --- | --- | --- |\n| a.pdf | K - Kreative / K1 Sketches | n |\n",
+  "Directory2.md",
+);
+const afterImport = store.listManualLeaves();
+assert.ok(afterImport.some((l) => l.path === "K - Kreative / K1 Sketches"));
+assert.ok(afterImport.some((l) => l.parent === "K" && l.name === "Sketches"));
 
 console.log("smoke ok:", roundTrip.length, "entries,", leaves.length, "manual leaves");

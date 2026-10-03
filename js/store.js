@@ -125,7 +125,11 @@
         return FM.suggestFromRules(input);
       },
       listManualLeaves: function () {
-        return FM.listManualLeaves();
+        return FM.listManualLeaves(
+          entries.map(function (entry) {
+            return entry.home;
+          }),
+        );
       },
     };
   }

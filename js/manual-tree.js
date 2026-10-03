@@ -56,11 +56,91 @@
     { code: "Z", name: "Quick Access", path: "Z - Quick Access" },
   ];
 
+  function parseHomeSegment(segment) {
+    const text = String(segment || "").trim();
+    if (!text) return null;
+    let match = text.match(/^([A-Za-z]\d*)\s*-\s*(.+)$/);
+    if (match) {
+      return { code: match[1], name: match[2].trim(), label: text };
+    }
+    match = text.match(/^([A-Za-z]\d*)\s+(.+)$/);
+    if (match) {
+      return { code: match[1], name: match[2].trim(), label: text };
+    }
+    return { code: null, name: text, label: text };
+  }
+
+  function leavesFromHomePath(homePath) {
+    const parts = String(homePath || "")
+      .split(/\s*\/\s*/)
+      .map(function (part) {
+        return part.trim();
+      })
+      .filter(Boolean);
+    const leaves = [];
+    let pathSoFar = "";
+    let parentCode;
+
+    parts.forEach(function (part) {
+      const parsed = parseHomeSegment(part);
+      if (!parsed) return;
+      pathSoFar = pathSoFar ? pathSoFar + " / " + parsed.label : parsed.label;
+      const code = parsed.code || "custom:" + pathSoFar;
+      const leaf = {
+        code: code,
+        name: parsed.name,
+        path: pathSoFar,
+      };
+      if (parentCode) leaf.parent = parentCode;
+      if (!parsed.code) leaf.custom = true;
+      leaves.push(leaf);
+      parentCode = code;
+    });
+
+    return leaves;
+  }
+
+  function mergeManualLeaves(baseLeaves, homePaths) {
+    const byPath = new Map();
+    (baseLeaves || []).forEach(function (leaf) {
+      byPath.set(leaf.path, Object.assign({}, leaf));
+    });
+
+    (homePaths || []).forEach(function (home) {
+      leavesFromHomePath(home).forEach(function (leaf) {
+        if (!byPath.has(leaf.path)) byPath.set(leaf.path, leaf);
+      });
+    });
+
+    const basePaths = new Set(
+      (baseLeaves || []).map(function (leaf) {
+        return leaf.path;
+      }),
+    );
+    const merged = (baseLeaves || []).map(function (leaf) {
+      return byPath.get(leaf.path);
+    });
+    const extras = [];
+    byPath.forEach(function (leaf, path) {
+      if (!basePaths.has(path)) extras.push(leaf);
+    });
+    extras.sort(function (a, b) {
+      return a.path.localeCompare(b.path);
+    });
+    return merged.concat(extras);
+  }
+
   global.FilingMap = global.FilingMap || {};
   global.FilingMap.MANUAL_LEAVES = MANUAL_LEAVES;
-  global.FilingMap.listManualLeaves = function listManualLeaves() {
-    return MANUAL_LEAVES.map(function (leaf) {
-      return Object.assign({}, leaf);
-    });
+  global.FilingMap.parseHomeSegment = parseHomeSegment;
+  global.FilingMap.leavesFromHomePath = leavesFromHomePath;
+  global.FilingMap.mergeManualLeaves = mergeManualLeaves;
+  global.FilingMap.listManualLeaves = function listManualLeaves(homePaths) {
+    return mergeManualLeaves(
+      MANUAL_LEAVES.map(function (leaf) {
+        return Object.assign({}, leaf);
+      }),
+      homePaths || [],
+    );
   };
 })(typeof window !== "undefined" ? window : globalThis);

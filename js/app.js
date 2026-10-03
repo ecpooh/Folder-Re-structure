@@ -1,6 +1,5 @@
 (function () {
   const store = FilingMap.createStore();
-  const leaves = store.listManualLeaves();
 
   const state = {
     tab: "file",
@@ -234,6 +233,7 @@
   function refreshLists() {
     renderToolbar();
     renderAlerts();
+    fillLeavesUi();
     if (state.tab === "search") {
       renderEntryList(
         el.searchList,
@@ -249,6 +249,7 @@
   }
 
   function fillLeavesUi() {
+    const leaves = store.listManualLeaves();
     el.leafList.innerHTML = "";
     el.pickList.innerHTML = "";
     leaves.forEach(function (leaf) {
@@ -509,7 +510,6 @@
     e.returnValue = "";
   });
 
-  fillLeavesUi();
   renderTabs();
   renderSuggestions();
   refreshLists();
