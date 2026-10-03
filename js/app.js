@@ -145,7 +145,7 @@
         li.innerHTML =
           '<div class="stack-sm">' +
           '<input class="field" data-edit="file" aria-label="File" />' +
-          '<input class="field" data-edit="home" aria-label="Home" />' +
+          '<input class="field" data-edit="home" aria-label="Home" list="leaf-datalist" />' +
           '<input class="field" data-edit="note" aria-label="Note" />' +
           '<div class="row">' +
           '<button type="button" class="btn" data-action="save-edit">Save</button>' +
