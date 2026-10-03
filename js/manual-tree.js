@@ -100,6 +100,49 @@
     return leaves;
   }
 
+  function segmentSortKey(segment) {
+    const parsed = parseHomeSegment(segment);
+    if (!parsed) return { letter: "", num: 0, rest: String(segment || "") };
+    const code = parsed.code || "";
+    const match = code.match(/^([A-Za-z]+)(\d*)$/);
+    return {
+      letter: match ? match[1].toUpperCase() : parsed.name.toUpperCase(),
+      num: match && match[2] ? parseInt(match[2], 10) : 0,
+      rest: (parsed.name || segment || "").toLowerCase(),
+    };
+  }
+
+  function compareSegments(a, b) {
+    if (a === b) return 0;
+    const ka = segmentSortKey(a);
+    const kb = segmentSortKey(b);
+    if (ka.letter !== kb.letter) return ka.letter < kb.letter ? -1 : 1;
+    if (ka.num !== kb.num) return ka.num - kb.num;
+    if (ka.rest !== kb.rest) return ka.rest < kb.rest ? -1 : 1;
+    return a < b ? -1 : 1;
+  }
+
+  function compareLeafPaths(aPath, bPath) {
+    const aParts = String(aPath || "")
+      .split(/\s*\/\s*/)
+      .filter(Boolean);
+    const bParts = String(bPath || "")
+      .split(/\s*\/\s*/)
+      .filter(Boolean);
+    const len = Math.min(aParts.length, bParts.length);
+    for (let i = 0; i < len; i += 1) {
+      const cmp = compareSegments(aParts[i], bParts[i]);
+      if (cmp !== 0) return cmp;
+    }
+    return aParts.length - bParts.length;
+  }
+
+  function sortLeavesByFolder(leaves) {
+    return (leaves || []).slice().sort(function (a, b) {
+      return compareLeafPaths(a.path, b.path);
+    });
+  }
+
   function mergeManualLeaves(baseLeaves, homePaths) {
     const byPath = new Map();
     (baseLeaves || []).forEach(function (leaf) {
@@ -112,28 +155,15 @@
       });
     });
 
-    const basePaths = new Set(
-      (baseLeaves || []).map(function (leaf) {
-        return leaf.path;
-      }),
-    );
-    const merged = (baseLeaves || []).map(function (leaf) {
-      return byPath.get(leaf.path);
-    });
-    const extras = [];
-    byPath.forEach(function (leaf, path) {
-      if (!basePaths.has(path)) extras.push(leaf);
-    });
-    extras.sort(function (a, b) {
-      return a.path.localeCompare(b.path);
-    });
-    return merged.concat(extras);
+    return sortLeavesByFolder(Array.from(byPath.values()));
   }
 
   global.FilingMap = global.FilingMap || {};
   global.FilingMap.MANUAL_LEAVES = MANUAL_LEAVES;
   global.FilingMap.parseHomeSegment = parseHomeSegment;
   global.FilingMap.leavesFromHomePath = leavesFromHomePath;
+  global.FilingMap.compareLeafPaths = compareLeafPaths;
+  global.FilingMap.sortLeavesByFolder = sortLeavesByFolder;
   global.FilingMap.mergeManualLeaves = mergeManualLeaves;
   global.FilingMap.listManualLeaves = function listManualLeaves(homePaths) {
     return mergeManualLeaves(
