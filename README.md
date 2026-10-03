@@ -1,15 +1,18 @@
 # Filing Map
 
-Static localhost page that suggests Personal Filing Directory (A–Z) Manual leaf homes and remembers filing **intent** in a `Directory.md` Markdown table.
+Static page that suggests Personal Filing Directory (A–Z) Manual leaf homes and remembers filing **intent** in a `Directory.md` Markdown table.
 
-Does **not** move files on disk. Does **not** verify the chosen home exists.
+Does **not** move files on disk. Does **not** verify the chosen home exists. No install.
 
-## Run (no install)
+## Quick start (`run.zip`)
 
-1. Open the repo folder (the one that contains `index.html` — not a drive root like `E:\`).
-2. Double-click `index.html`, or right-click → Open with your browser.
+1. Download [`run.zip`](./run.zip) from this repo.
+2. Unzip into **any** folder (Desktop, Downloads, USB — anywhere).
+3. Open that folder and double-click `index.html` (or right-click → Open with Chrome / Edge / Firefox).
 
-Chrome / Edge / Firefox all work. Optional fonts load from Google Fonts when online; the app still works offline without them.
+Keep the unzipped folder together (`index.html`, `css/`, `js/`, `Directory.md`). Do not open a drive root like `E:\` as the app folder.
+
+Optional fonts load from Google Fonts when online; the app still works offline without them.
 
 ## Directory.md workflow
 
@@ -21,18 +24,19 @@ Unsaved changes show a yellow dot and warn if you close the tab.
 
 ## Optional local server
 
-If your browser restricts `file://` for any reason:
+If your browser restricts `file://`:
 
 ```bash
-cd path/to/Folder-Re-structure
+cd path/to/unzipped-folder
 python3 -m http.server 43123 --bind 127.0.0.1
 ```
 
 Then open [http://127.0.0.1:43123](http://127.0.0.1:43123).
 
-## Spec & tickets
+## What’s in `run.zip`
 
-See Project store:
-
-- `docs/filing-map-spec.md`
-- `docs/filing-map-tickets/`
+- `index.html`
+- `css/styles.css`
+- `js/` (`app.js`, `directory-md.js`, `manual-tree.js`, `rules.js`, `store.js`)
+- `Directory.md` (starter table)
+- `README.md` (this file)
