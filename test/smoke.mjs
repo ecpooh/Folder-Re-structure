@@ -111,4 +111,36 @@ const afterImport = store.listManualLeaves();
 assert.ok(afterImport.some((l) => l.path === "K - Kreative / K1 Sketches"));
 assert.ok(afterImport.some((l) => l.parent === "K" && l.name === "Sketches"));
 
+const ordered = FM.createStore();
+ordered.confirmAdd({
+  file: "cop.pdf",
+  home: "A - Productivity / A2 Work / A21 Code of Practice",
+});
+ordered.confirmAdd({
+  file: "travel.pdf",
+  home: "A - Productivity / A5 Travel",
+});
+ordered.confirmAdd({
+  file: "personal.pdf",
+  home: "A - Productivity / A1 Personal",
+});
+ordered.confirmAdd({
+  file: "work.pdf",
+  home: "A - Productivity / A2 Work",
+});
+const orderedHomes = ordered.listEntries().map((e) => e.file + " => " + e.home);
+assert.equal(
+  JSON.stringify(orderedHomes),
+  JSON.stringify([
+    "personal.pdf => A - Productivity / A1 Personal",
+    "work.pdf => A - Productivity / A2 Work",
+    "cop.pdf => A - Productivity / A2 Work / A21 Code of Practice",
+    "travel.pdf => A - Productivity / A5 Travel",
+  ]),
+);
+assert.match(
+  ordered.toMarkdown(),
+  /A1 Personal[\s\S]*A2 Work \|[\s\S]*A21 Code of Practice[\s\S]*A5 Travel/,
+);
+
 console.log("smoke ok:", roundTrip.length, "entries,", leaves.length, "manual leaves");
