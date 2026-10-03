@@ -44,11 +44,18 @@ if not exist "%ROOT%\" (
   exit /b 1
 )
 
+rem Strip a trailing backslash before quoting for PowerShell.
+rem Classic cmd pitfall: -Root "H:\" escapes the closing quote, so -OutFile
+rem never binds and PowerShell interactively prompts for OutFile.
+rem H:\ → H:  |  D:\Some Folder\ → D:\Some Folder  |  other paths unchanged.
+set "PS_ROOT=%ROOT%"
+if "%PS_ROOT:~-1%"=="\" set "PS_ROOT=%PS_ROOT:~0,-1%"
+
 set "STAMP="
 for /f "usebackq delims=" %%I in (`powershell -NoProfile -Command "Get-Date -Format 'yyyyMMdd-HHmmss'" 2^>nul`) do set "STAMP=%%I"
 if not defined STAMP set "STAMP=%RANDOM%%RANDOM%"
 
-set "OUTFILE=%ROOT%\file-inventory-%STAMP%.csv"
+set "OUTFILE=%PS_ROOT%\file-inventory-%STAMP%.csv"
 
 echo.
 echo ============================================================
@@ -62,7 +69,7 @@ echo.
 echo Scanning... progress updates every ~5 seconds.
 echo.
 
-powershell -NoProfile -ExecutionPolicy Bypass -File "%PS1%" -Root "%ROOT%" -OutFile "%OUTFILE%"
+powershell -NoProfile -ExecutionPolicy Bypass -File "%PS1%" -Root "%PS_ROOT%" -OutFile "%OUTFILE%"
 set "PS_EXIT=%ERRORLEVEL%"
 
 echo.

@@ -63,6 +63,10 @@ Console prints a running count about every 5 seconds (or every 5000 files). The 
 - **One row per file** — empty directories are not listed.
 - Inventory files named `file-inventory-*.csv` or `_file-inventory.csv` are excluded from results so re-scans stay clean.
 
+## Drive-root quoting (fixed)
+
+Do **not** hand-roll `powershell … -Root "H:\" -OutFile "…"`. In `cmd`, a trailing `\` before the closing quote escapes that quote, so `-OutFile` is swallowed and PowerShell prompts `OutFile:`. The `.bat` strips a trailing `\` from the root before calling PowerShell (`H:\` → `H:`; `D:\Some Folder\` → `D:\Some Folder`), so double-click / `scan-files.bat "H:\"` never prompts.
+
 ## Safety
 
 - Does not modify, move, or delete anything except creating the new CSV in the scan root.
