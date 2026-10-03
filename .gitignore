@@ -1,6 +1,9 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# =============================================================================
+# Filing Map / folder-restructure — ignore rules
+# Combines Next.js app ignores with secret & confidential-file hygiene.
+# =============================================================================
 
-# dependencies
+# --- dependencies ---
 /node_modules
 /.pnp
 .pnp.*
@@ -10,33 +13,137 @@
 !.yarn/releases
 !.yarn/versions
 
-# testing
+# --- testing ---
 /coverage
 
-# next.js
+# --- next.js ---
 /.next/
 /out/
 
-# production
+# --- production ---
 /build
 
-# misc
-.DS_Store
-*.pem
-
-# debug
+# --- debug logs ---
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+*.log
 
-# env files (can opt-in for committing if needed)
-.env*
-
-# vercel
+# --- vercel / typescript build artifacts ---
 .vercel
-
-# typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# --- app local uploads ---
 uploads/
+
+# --- Environment & local config ---
+.env
+.env.*
+!.env.example
+!.env.*.example
+.envrc
+.flaskenv
+
+# --- Private keys, certificates, keystores ---
+*.pem
+*.key
+*.p12
+*.pfx
+*.p7b
+*.p7c
+*.crt
+*.cer
+*.der
+*.jks
+*.keystore
+*.truststore
+id_rsa
+id_rsa.*
+id_dsa
+id_dsa.*
+id_ecdsa
+id_ecdsa.*
+id_ed25519
+id_ed25519.*
+*.ppk
+*.asc
+*.gpg
+*.kdbx
+*.kdb
+
+# --- Credential stores & cloud auth ---
+credentials.json
+**/credentials.json
+service-account*.json
+*-service-account.json
+*firebase-adminsdk*.json
+.aws/
+.gcloud/
+.gcp/
+.azure/
+.kube/config
+.docker/config.json
+.netrc
+.npmrc
+.pypirc
+*.tfvars
+*.tfvars.json
+terraform.tfstate
+terraform.tfstate.*
+.terraform/
+
+# --- Common secret / credential filename patterns ---
+*secret*
+*password*
+*passwd*
+*credentials*
+*apikey*
+*api_key*
+*access_token*
+*auth_token*
+*.token
+
+# --- Confidential / personal documents (folder-restructure project) ---
+*.pdf
+*.docx
+*.doc
+*.xlsx
+*.xls
+*.pptx
+*.ppt
+*.odt
+*.ods
+*.odp
+*.rtf
+*.pages
+*.numbers
+*.keynote
+confidential/
+private/
+secrets/
+Personal/
+**/confidential/**
+**/private/**
+**/secrets/**
+
+# --- Local dumps & backups that may contain sensitive data ---
+*.sql.gz
+*.dump
+*.bak
+*.backup
+*.tmp
+
+# --- OS noise ---
+.DS_Store
+Thumbs.db
+desktop.ini
+*~
+*.swp
+*.swo
+
+# --- Agent / tooling junk ---
+.agent-tools/
+agent-tools/
+.cursor-tmp/
