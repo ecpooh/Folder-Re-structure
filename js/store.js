@@ -9,7 +9,22 @@
     let fileHandle = null;
     let sourceName = "Directory.md";
 
+    function sortEntries() {
+      entries.sort(function (a, b) {
+        const byHome = FM.compareLeafPaths(a.home, b.home);
+        if (byHome !== 0) return byHome;
+        const byFile = String(a.file).localeCompare(String(b.file), undefined, {
+          sensitivity: "base",
+        });
+        if (byFile !== 0) return byFile;
+        return String(a.note || "").localeCompare(String(b.note || ""), undefined, {
+          sensitivity: "base",
+        });
+      });
+    }
+
     function normalize() {
+      sortEntries();
       entries = entries.map(function (e, i) {
         return {
           id: "row-" + i,
@@ -73,9 +88,14 @@
           home: home,
           note: note,
         });
+        normalize();
         markDirty();
+        const entry =
+          entries.find(function (e) {
+            return e.file === file && e.home === home && e.note === note;
+          }) || entries[entries.length - 1];
         return {
-          entry: Object.assign({}, entries[entries.length - 1]),
+          entry: Object.assign({}, entry),
           duplicateWarning: duplicateWarning,
         };
       },
@@ -107,8 +127,17 @@
         if (!updated.file) throw new Error("File is required");
         if (!updated.home) throw new Error("Home is required");
         entries[index] = updated;
+        normalize();
         markDirty();
-        return Object.assign({}, updated);
+        const entry =
+          entries.find(function (e) {
+            return (
+              e.file === updated.file &&
+              e.home === updated.home &&
+              e.note === updated.note
+            );
+          }) || updated;
+        return Object.assign({}, entry);
       },
       remove: function (id) {
         const next = entries.filter(function (e) {
@@ -125,7 +154,11 @@
         return FM.suggestFromRules(input);
       },
       listManualLeaves: function () {
-        return FM.listManualLeaves();
+        return FM.listManualLeaves(
+          entries.map(function (entry) {
+            return entry.home;
+          }),
+        );
       },
     };
   }
