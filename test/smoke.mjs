@@ -85,17 +85,19 @@ assert.ok(withImport.some((l) => l.path === "Somewhere / Custom"));
 const aPaths = withImport
   .filter((l) => l.path === "A - Productivity" || l.path.indexOf("A - Productivity /") === 0)
   .map((l) => l.path);
-assert.deepEqual(aPaths, [
-  "A - Productivity",
-  "A - Productivity / A1 Personal",
-  "A - Productivity / A2 Work",
-  "A - Productivity / A2 Work / A21 Code of Practice",
-  "A - Productivity / A3 Study Material",
-  "A - Productivity / A4 Exams",
-  "A - Productivity / A4 Exams / A41 CPR",
-  "A - Productivity / A5 Travel",
-]);
-
+assert.equal(
+  JSON.stringify(aPaths),
+  JSON.stringify([
+    "A - Productivity",
+    "A - Productivity / A1 Personal",
+    "A - Productivity / A2 Work",
+    "A - Productivity / A2 Work / A21 Code of Practice",
+    "A - Productivity / A3 Study Material",
+    "A - Productivity / A4 Exams",
+    "A - Productivity / A4 Exams / A41 CPR",
+    "A - Productivity / A5 Travel",
+  ]),
+);
 const fIdx = withImport.findIndex((l) => l.path === "F - Finance / F1 E-Bills");
 const f11Idx = withImport.findIndex(
   (l) => l.path === "F - Finance / F1 E-Bills / F11 Taxes",
