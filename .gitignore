@@ -1,110 +1,42 @@
-# =============================================================================
-# Secret & confidential-file hygiene
-# Keeps env files, keys, credentials, and private documents out of git.
-# =============================================================================
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
-# --- Environment & local config ---
-.env
-.env.*
-!.env.example
-!.env.*.example
-.envrc
-.flaskenv
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
 
-# --- Private keys, certificates, keystores ---
-*.pem
-*.key
-*.p12
-*.pfx
-*.p7b
-*.p7c
-*.crt
-*.cer
-*.der
-*.jks
-*.keystore
-*.truststore
-id_rsa
-id_rsa.*
-id_dsa
-id_dsa.*
-id_ecdsa
-id_ecdsa.*
-id_ed25519
-id_ed25519.*
-*.ppk
-*.asc
-*.gpg
-*.kdbx
-*.kdb
+# testing
+/coverage
 
-# --- Credential stores & cloud auth ---
-credentials.json
-**/credentials.json
-service-account*.json
-*-service-account.json
-*firebase-adminsdk*.json
-.aws/
-.gcloud/
-.gcp/
-.azure/
-.kube/config
-.docker/config.json
-.netrc
-.npmrc
-.pypirc
-*.tfvars
-*.tfvars.json
-terraform.tfstate
-terraform.tfstate.*
-.terraform/
+# next.js
+/.next/
+/out/
 
-# --- Common secret / credential filename patterns ---
-*secret*
-*password*
-*passwd*
-*credentials*
-*apikey*
-*api_key*
-*access_token*
-*auth_token*
-*.token
+# production
+/build
 
-# --- Confidential / personal documents (folder-restructure project) ---
-*.pdf
-*.docx
-*.doc
-*.xlsx
-*.xls
-*.pptx
-*.ppt
-*.odt
-*.ods
-*.odp
-*.rtf
-*.pages
-*.numbers
-*.keynote
-confidential/
-private/
-secrets/
-Personal/
-**/confidential/**
-**/private/**
-**/secrets/**
-
-# --- Local dumps & backups that may contain sensitive data ---
-*.sql.gz
-*.dump
-*.bak
-*.backup
-*.tmp
-*.log
-
-# --- OS noise ---
+# misc
 .DS_Store
-Thumbs.db
-desktop.ini
-*~
-*.swp
-*.swo
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+uploads/
