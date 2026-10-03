@@ -34,7 +34,7 @@ if ($MaxPartBytes -lt 1024) {
 }
 
 $utf8 = New-Object System.Text.UTF8Encoding $false
-$header = 'FullPath,FileName,Directory,Extension,SizeBytes,LastWriteTime'
+$header = 'FullPath,SizeBytes,LastWriteTime'
 $headerBytes = $utf8.GetByteCount($header) + 1  # + LF from WriteLine
 
 $count = [int64]0
@@ -74,18 +74,13 @@ try {
         if ($name -like 'file-inventory-*.csv') { return }
 
         $full = $_.FullName
-        $dir  = $_.DirectoryName
-        $ext  = $_.Extension
         $size = $_.Length
         $lwt  = $_.LastWriteTime.ToString('yyyy-MM-dd HH:mm:ss')
 
         $qf = '"' + ($full -replace '"', '""') + '"'
-        $qn = '"' + ($name -replace '"', '""') + '"'
-        $qd = '"' + ($dir  -replace '"', '""') + '"'
-        $qe = '"' + ($ext  -replace '"', '""') + '"'
         $qt = '"' + ($lwt  -replace '"', '""') + '"'
 
-        $line = $qf + ',' + $qn + ',' + $qd + ',' + $qe + ',' + $size + ',' + $qt
+        $line = $qf + ',' + $size + ',' + $qt
         $lineBytes = [int64]($utf8.GetByteCount($line) + 1)
 
         # Roll before writing when the next row would exceed the cap.

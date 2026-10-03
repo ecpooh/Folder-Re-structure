@@ -14,6 +14,7 @@ rem  Output rolls into ~8 MB parts:
 rem    file-inventory-YYYYMMDD-HHMMSS-part001.csv
 rem    file-inventory-YYYYMMDD-HHMMSS-part002.csv
 rem    …
+rem  CSV columns: FullPath,SizeBytes,LastWriteTime
 rem
 rem  Read-only: does NOT delete, move, or modify user files.
 rem  Requires Windows PowerShell (built in). No admin rights required.

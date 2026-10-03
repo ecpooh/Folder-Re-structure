@@ -41,16 +41,19 @@ Every part starts with the same CSV header row. Timestamped so re-runs do not ov
 
 ### CSV columns
 
+Lean header on every part:
+
+```text
+FullPath,SizeBytes,LastWriteTime
+```
+
 | Column | Meaning |
 |--------|---------|
 | `FullPath` | Full absolute path to the file |
-| `FileName` | File name only (with extension) |
-| `Directory` | Parent folder path |
-| `Extension` | Extension including the dot (e.g. `.pdf`); empty if none |
 | `SizeBytes` | Size in bytes |
 | `LastWriteTime` | Last modified time (`yyyy-MM-dd HH:mm:ss`, local) |
 
-Paths are CSV-quoted so commas and quotes in names are safe.
+`FileName` / `Directory` / `Extension` are omitted (derivable from `FullPath`). Paths are CSV-quoted so commas and quotes in names are safe.
 
 ## Progress
 
